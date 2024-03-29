@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'api_auth',
+    'core',
 ]
 
 MIDDLEWARE = [
@@ -95,6 +96,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'dap_document_tracker_backend.wsgi.application'
+
+APPEND_SLASH = False
 
 
 # Database

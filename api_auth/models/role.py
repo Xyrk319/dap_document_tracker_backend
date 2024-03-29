@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Permission
 from django.db import models
-from utils.TimeStampedModel import TimeStampedModel
-from utils.SoftDeleteModel import SoftDeleteModel
+from core.models.TimeStampedModel import TimeStampedModel
+from core.models.SoftDeleteModel import SoftDeleteModel
 
 class Role(TimeStampedModel, SoftDeleteModel):
     name = models.CharField(max_length=255, unique=True)
