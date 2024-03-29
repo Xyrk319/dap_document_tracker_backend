@@ -4,7 +4,10 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserSerializer  # Ensure this is your updated serializer
+from rest_framework import generics
+from .models import User, Role
+from django.contrib.auth.models import Permission
+from .serializers import UserSerializer, RoleSerializer, PermissionSerializer
 
 User = get_user_model()
 
@@ -18,10 +21,12 @@ class RegisterView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class LoginView(APIView):
+    permission_classes = [AllowAny]
     def post(self, request):
-        username = request.data.get('username')
+        username = request.data.get('email')
         password = request.data.get('password')
         user = authenticate(username=username, password=password)
+        print(user, username, password)
         if user:
             refresh = RefreshToken.for_user(user)
             return Response({
@@ -29,3 +34,27 @@ class LoginView(APIView):
                 'access': str(refresh.access_token),
             }, status=status.HTTP_200_OK)
         return Response({'error': 'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+class UserListView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class UserDetailView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+class RoleListView(generics.ListAPIView):
+    queryset = Role.objects.all()
+    serializer_class = RoleSerializer
+
+class RoleDetailView(generics.RetrieveAPIView):
+    queryset = Role.objects.all()
+    serializer_class = RoleSerializer
+
+class PermissionListView(generics.ListAPIView):
+    queryset = Permission.objects.all()
+    serializer_class = PermissionSerializer
+
+class PermissionDetailView(generics.RetrieveAPIView):
+    queryset = Permission.objects.all()
+    serializer_class = PermissionSerializer
