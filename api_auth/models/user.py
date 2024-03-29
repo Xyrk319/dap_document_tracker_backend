@@ -14,9 +14,10 @@ class User(AbstractBaseUser, TimeStampedModel, SoftDeleteModel):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [
-        'first_name'
-        'last_name'
-        'password'
+        'first_name',
+        'last_name',
+        'password',
+        'role_id',
         ]
 
     def __str__(self):
