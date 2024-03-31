@@ -1,10 +1,11 @@
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import User, Role
 from django.contrib.auth.models import Permission
 from .serializers import UserSerializer, RoleSerializer, PermissionSerializer
@@ -34,27 +35,44 @@ class LoginView(APIView):
                 'access': str(refresh.access_token),
             }, status=status.HTTP_200_OK)
         return Response({'error': 'Invalid Credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-
+    
+# Users
 class UserListView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 class UserDetailView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+class UserAuthenticatedView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, *args, **kwargs):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+    
+# Roles
 class RoleListView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
 
 class RoleDetailView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
 
+
+# Permissions
+
 class PermissionListView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Permission.objects.all()
     serializer_class = PermissionSerializer
 
 class PermissionDetailView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Permission.objects.all()
     serializer_class = PermissionSerializer
