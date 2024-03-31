@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from core.models.TimeStampedModel import TimeStampedModel
 from core.models.SoftDeleteModel import SoftDeleteModel
 from .role import Role
@@ -19,6 +19,6 @@ class User(AbstractBaseUser, TimeStampedModel, SoftDeleteModel):
         'password',
         'role_id',
         ]
-
+    objects = BaseUserManager()
     def __str__(self):
         return self.email
